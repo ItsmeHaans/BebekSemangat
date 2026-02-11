@@ -1,0 +1,320 @@
+
+-- =====================================================
+-- EVENTS
+-- =====================================================
+CREATE TABLE events (
+    id SERIAL PRIMARY KEY,
+
+    title VARCHAR(150) NOT NULL,
+    description TEXT,
+
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+
+    status VARCHAR(20) NOT NULL DEFAULT 'upcoming',
+
+    detail_link TEXT, -- nullable (frontend hides button if NULL)
+
+    cover_image TEXT, -- image path / URL
+
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    is_featured BOOLEAN NOT NULL DEFAULT FALSE,
+
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT valid_date_range CHECK (end_date >= start_date)
+);
+
+
+
+-- =====================================================
+-- LOCATIONS
+-- =====================================================
+CREATE TABLE locations (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    phone_number TEXT,
+    lat DOUBLE PRECISION NOT NULL,
+    lng DOUBLE PRECISION NOT NULL,
+    address TEXT NOT NULL,
+    hours TEXT,
+    rating DOUBLE PRECISION CHECK (rating BETWEEN 0 AND 5),
+    reviews INTEGER DEFAULT 0,
+    image_url TEXT,
+    maps_url TEXT
+);
+ALTER TABLE locations
+ADD COLUMN is_active BOOLEAN NOT NULL DEFAULT true;
+
+-- =====================================================
+-- MENU CATEGORIES
+-- =====================================================
+CREATE TABLE menu_categories (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL UNIQUE
+);
+
+-- =====================================================
+-- MENU ITEMS
+-- =====================================================
+CREATE TABLE menu_items (
+    id SERIAL PRIMARY KEY,
+    category_id INTEGER NOT NULL
+        REFERENCES menu_categories(id) ON DELETE RESTRICT,
+    title TEXT NOT NULL,
+    description TEXT,
+    price INTEGER NOT NULL CHECK (price > 0),
+    image_url TEXT,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE
+);
+
+CREATE INDEX idx_menu_items_category
+ON menu_items(category_id);
+
+-- =====================================================
+-- ORDERS (VISITOR SESSION)
+-- =====================================================
+CREATE TABLE orders (
+    id SERIAL PRIMARY KEY,
+    visitor_token UUID NOT NULL,
+    order_name TEXT DEFAULT 'Draft Order',
+    status TEXT NOT NULL DEFAULT 'draft'
+        CHECK (status IN ('draft', 'confirmed', 'cancelled')),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    expires_at TIMESTAMPTZ NOT NULL,
+    UNIQUE (visitor_token)
+);
+
+CREATE INDEX idx_orders_expires
+ON orders(expires_at);
+
+CREATE INDEX idx_orders_status
+ON orders(status);
+
+-- =====================================================
+-- ORDER ITEMS
+-- =====================================================
+CREATE TABLE order_items (
+    id SERIAL PRIMARY KEY,
+    order_id INTEGER NOT NULL
+        REFERENCES orders(id) ON DELETE CASCADE,
+    menu_item_id INTEGER NOT NULL
+        REFERENCES menu_items(id) ON DELETE RESTRICT,
+    quantity INTEGER NOT NULL DEFAULT 1 CHECK (quantity > 0),
+    UNIQUE (order_id, menu_item_id)
+);
+
+CREATE INDEX idx_order_items_order
+ON order_items(order_id);
+
+-- =====================================================
+-- DAILY QUEUE SEQUENCE (ANTI RACE CONDITION)
+-- =====================================================
+CREATE TABLE daily_queue_counters (
+    queue_date DATE PRIMARY KEY,
+    last_number INTEGER NOT NULL DEFAULT 0
+);
+
+-- =====================================================
+-- RESERVATIONS
+-- =====================================================
+CREATE TABLE reservations (
+    id SERIAL PRIMARY KEY,
+    order_id INTEGER NOT NULL
+        REFERENCES orders(id) ON DELETE CASCADE,
+    customer_name TEXT NOT NULL,
+    reservation_at TIMESTAMPTZ NOT NULL,
+
+    -- 🔥 FIX
+    reservation_date DATE NOT NULL,
+
+    queue_number INTEGER NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+ALTER TABLE reservations
+ALTER COLUMN order_id DROP NOT NULL;
+
+ALTER TABLE reservations
+DROP COLUMN reservation_at;
+
+ALTER TABLE reservations
+ADD COLUMN reservation_time TIME NOT NULL;
+
+ALTER TABLE reservations
+ADD COLUMN pax INTEGER NOT NULL DEFAULT 1,
+ADD COLUMN location_id INTEGER NOT NULL REFERENCES locations(id),
+ADD COLUMN status TEXT NOT NULL DEFAULT 'pending',
+ADD COLUMN phone TEXT;
+
+ALTER TABLE reservations
+ADD CONSTRAINT chk_reservation_status
+CHECK (status IN ('pending', 'confirmed', 'cancelled'));
+
+CREATE INDEX idx_reservations_admin_view
+ON reservations (reservation_date, location_id, status);
+
+
+CREATE INDEX idx_reservations_date
+ON reservations (reservation_date);
+
+CREATE UNIQUE INDEX uq_reservations_daily_queue
+ON reservations (reservation_date, queue_number);
+
+
+CREATE UNIQUE INDEX uq_active_visitor_token
+ON orders(visitor_token)
+WHERE status = 'draft';
+
+CREATE UNIQUE INDEX uq_reservation_order
+ON reservations(order_id)
+WHERE order_id IS NOT NULL;
+
+
+-- =====================================================
+-- DUMMY DATA
+-- =====================================================
+INSERT INTO menu_categories (id, name) VALUES
+    (1, 'main'),
+    (2, 'side'),
+    (3, 'snack'),
+    (4, 'beverage')
+ON CONFLICT (id) DO NOTHING;
+INSERT INTO menu_items (id, category_id, title, description, price, image_url, is_active) VALUES
+    (3, 1, 'Soto', 'Warm Indonesian chicken soup.', 30000, 'https://zvzpeyvkrtyjsbgmwusf.supabase.co/storage/v1/object/public/menu-images/9201d68f-f69a-46e6-bf79-c5b3b7125dca.jpg', TRUE),
+    (1, 1, 'Ayam Goreng', 'Signature fried chicken topped with savory crumbs.', 32000, 'https://zvzpeyvkrtyjsbgmwusf.supabase.co/storage/v1/object/public/menu-images/c6ba955a-e72a-4b7e-a99a-f0a80fa004df.jpg', TRUE),
+    (2, 1, 'Sop', 'A comforting traditional soup.', 35000, 'https://zvzpeyvkrtyjsbgmwusf.supabase.co/storage/v1/object/public/menu-images/d7652ea3-6a2b-47c4-bf4a-770e0bd692ff.jpg', TRUE);
+INSERT INTO menu_items (id, category_id, title, description, price, image_url, is_active) VALUES
+    (6, 2, 'Perkedel', 'Classic potato fritter.', 10000, 'https://zvzpeyvkrtyjsbgmwusf.supabase.co/storage/v1/object/public/menu-images/c6b12dc0-3bb5-4ecb-9314-6a2e5614e28f.jpg', TRUE),
+    (5, 2, 'Tahu Isi', 'Stuffed tofu with vegetables.', 15000, 'https://zvzpeyvkrtyjsbgmwusf.supabase.co/storage/v1/object/public/menu-images/e1973e95-20eb-4a3b-8794-bec8699d257a.jpg', TRUE),
+    (4, 2, 'Tempe Goreng', 'Crispy fried tempeh.', 12000, 'https://zvzpeyvkrtyjsbgmwusf.supabase.co/storage/v1/object/public/menu-images/c193f891-7666-4dbf-9d64-0e6b0e28936f.jpg', TRUE);
+INSERT INTO menu_items (id, category_id, title, description, price, image_url, is_active) VALUES
+    (7, 3, 'Pisang Goreng', 'Fried banana with crispy batter.', 14000, 'https://zvzpeyvkrtyjsbgmwusf.supabase.co/storage/v1/object/public/menu-images/1ea73af0-af5f-4ea3-94bb-d90388339ae6.jpg', TRUE),
+    (8, 3, 'Singkong Keju', 'Cassava with cheese topping.', 18000, 'https://zvzpeyvkrtyjsbgmwusf.supabase.co/storage/v1/object/public/menu-images/2e7cba7e-2993-40f0-9232-0e8f9b25a936.jpg', TRUE),
+    (9, 3, 'Kroket', 'Golden fried croquette.', 12000, 'https://zvzpeyvkrtyjsbgmwusf.supabase.co/storage/v1/object/public/menu-images/5aa02fbb-6457-4d21-9849-f2803a87a820.jpg', TRUE);
+INSERT INTO menu_items (id, category_id, title, description, price, image_url, is_active) VALUES
+    (10, 4, 'Es Teh Manis', 'Sweet iced tea.', 8000, 'https://zvzpeyvkrtyjsbgmwusf.supabase.co/storage/v1/object/public/menu-images/f2da19a5-635c-43b4-bc0c-bc1bc8cec324.jpg', TRUE),
+    (11, 4, 'Es Jeruk', 'Fresh iced orange juice.', 10000, 'https://zvzpeyvkrtyjsbgmwusf.supabase.co/storage/v1/object/public/menu-images/683b945d-db60-4b06-be99-c8e9e9ff4d66.jpg', TRUE),
+    (12, 4, 'Wedang Jahe', 'Warm ginger drink.', 12000, 'https://zvzpeyvkrtyjsbgmwusf.supabase.co/storage/v1/object/public/menu-images/d342a697-67e9-49e6-8947-e04e23f5147b.jpg', TRUE);
+INSERT INTO locations (
+    id,
+    name,
+    lat,
+    lng,
+    address,
+    hours,
+    rating,
+    reviews,
+    image_url,
+    maps_url
+) VALUES
+(
+    1,
+    'A',
+    -7.0247226,
+    110.3346633,
+    'Kota Semarang Semarang City Central Java',
+    '09.00 - 22.00',
+    5,
+    100,
+    'http://127.0.0.1:8000/Assets/uploads/843119b8-7e21-4d84-9957-fac8909b788e.jpg',
+    'https://www.google.com/maps/place/Semarang,+Semarang+City,+Central+Java/@-7.0247226,110.3346633,12z'
+),
+(
+    2,
+    'B',
+    -6.2297209,
+    106.664704,
+    'Jakarta',
+    '1.00 - 4.00',
+    5,
+    1000,
+    'http://127.0.0.1:8000/Assets/uploads/d8005c4a-abcc-4f1a-9cf4-6556668e3997.jpg',
+    'https://www.google.com/maps/place/Jakarta/@-6.2297209,106.664704,11z'
+);
+
+INSERT INTO events (
+    title,
+    description,
+    start_date,
+    end_date,
+    status,
+    detail_link,
+    cover_image,
+    is_active,
+    is_featured
+) VALUES
+-- =========================
+-- UPCOMING EVENT
+-- =========================
+(
+    'Seafood Festival 2025',
+    'A special seafood festival featuring premium lobster, crab, and seasonal chef specials.',
+    '2025-03-10',
+    '2025-03-15',
+    'upcoming',
+    'https://amartaseruni.com/events/seafood-festival-2025',
+    'https://cdn.amartaseruni.com/events/seafood-festival.jpg',
+    TRUE,
+    TRUE
+),
+
+-- =========================
+-- ONGOING EVENT
+-- =========================
+(
+    'Weekend Family Feast',
+    'Enjoy a family-friendly seafood dining experience every weekend with special bundle menus.',
+    '2025-02-01',
+    '2025-02-28',
+    'ongoing',
+    NULL, -- 🔥 no detail link → button hidden
+    'https://cdn.amartaseruni.com/events/family-feast.jpg',
+    TRUE,
+    FALSE
+),
+
+-- =========================
+-- PAST EVENT
+-- =========================
+(
+    'New Year Seafood Celebration',
+    'Celebrate the New Year with our limited-time premium seafood menu and live music.',
+    '2024-12-28',
+    '2025-01-02',
+    'past',
+    'https://amartaseruni.com/events/new-year-seafood',
+    'https://cdn.amartaseruni.com/events/new-year.jpg',
+    TRUE,
+    FALSE
+),
+
+-- =========================
+-- UPCOMING (NO IMAGE)
+-- =========================
+(
+    'Valentine’s Seafood Night',
+    'Romantic dinner experience with curated seafood courses for couples.',
+    '2025-02-14',
+    '2025-02-14',
+    'upcoming',
+    'https://amartaseruni.com/events/valentine',
+    NULL,
+    TRUE,
+    TRUE
+),
+
+-- =========================
+-- INACTIVE EVENT (ADMIN ONLY)
+-- =========================
+(
+    'Internal Tasting Session',
+    'Internal menu tasting event for chefs and staff.',
+    '2025-01-20',
+    '2025-01-20',
+    'past',
+    NULL,
+    NULL,
+    FALSE,
+    FALSE
+);

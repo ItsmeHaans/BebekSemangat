@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin | Menu</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inika:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/adminMenu.css" />
+    <link rel="shortcut icon" href="assets/APS.png" type="image/x-icon">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body class="header-solid">
+
+<header class="site-header is-hero" id="siteHeader">
+  <div class="header-inner">
+    <a href="" class="logo">
+  <button id="adminLogout">Logout</button>
+
+</a>
+
+
+    <nav class="nav">
+      <a href="adminMenu.html" class="is-active">MENU</a>
+      <a href="adminLocations.html" >LOCATIONS</a>
+      <a href="adminEvent.html">EVENTS</a>
+        <a href="Reservation.html">RESERVATION</a>
+    </nav>
+
+    <div class="header-actions">
+      <h3 class="admin">ADMIN</h3>
+    </div>
+  </div>
+</header>
+
+<main>
+
+    <section class="menu-section">
+  <div class="menu-layout">
+
+    <!-- LEFT: Categories -->
+    <aside class="menu-categories">
+      <button class="menu-cat is-active" data-target="main">Main Course</button>
+      <button class="menu-cat" data-target="side">Side Dishes</button>
+      <button class="menu-cat" data-target="snack">Snacks</button>
+      <button class="menu-cat" data-target="beverage">Beverages</button>
+    </aside>
+
+    <!-- RIGHT: Content -->
+    <div class="menu-content">
+
+      <!-- CATEGORY -->
+      <section id="main" class="menu-group">
+        <h2 class="menu-group-title">Main Course</h2>
+        <div class="menu-grid" data-category="main"></div>
+      </section>
+
+      <section id="side" class="menu-group">
+        <h2 class="menu-group-title">Side Dishes</h2>
+        <div class="menu-grid" data-category="side"></div>
+      </section>
+
+      <section id="snack" class="menu-group">
+        <h2 class="menu-group-title">Snacks</h2>
+        <div class="menu-grid" data-category="snack"></div>
+      </section>
+
+      <section id="beverage" class="menu-group">
+        <h2 class="menu-group-title">Beverages</h2>
+        <div class="menu-grid" data-category="beverage"></div>
+      </section>
+
+    </div>
+  </div>
+</section>
+
+</main>
+<!-- ADD / EDIT MENU MODAL -->
+<div class="modal" id="menuModal" aria-hidden="true">
+  <div class="modal-backdrop" id="menuModalBackdrop"></div>
+  <div class="modal-dialog">
+    <header class="modal-header">
+      <h2 id="modalTitle">Add Menu</h2>
+    </header>
+    <form id="menuForm" class="modal-body">
+      <input type="hidden" id="menuId" />
+      <label>Menu Name <input type="text" id="menuName" required /></label>
+      <label>Description <textarea id="menuDesc" rows="3"></textarea></label>
+      <label>Price <input type="number" id="menuPrice" required /></label>
+      <input type="url" id="menuImageUrl" /> <label>Upload Image <input type="file" id="menuImageFile" accept="image/*" /></label>
+      <div id="imagePreview" class="image-preview"></div>
+      <footer class="modal-footer">
+        <button type="button" class="btn secondary" id="btnMenuCancel">Cancel</button>
+        <button type="submit" class="btn primary">Save</button>
+      </footer>
+    </form>
+  </div>
+</div>
+
+<div class="modal" id="cropModal" aria-hidden="true" style="z-index: 3000;">
+  <div class="modal-backdrop"></div>
+  <div class="modal-dialog">
+    <header class="modal-header">
+      <h2 style="color: white; margin:0;">Adjust Image</h2>
+    </header>
+    <div class="modal-body" style="padding: 0; overflow: hidden;">
+      <div class="cropper-stage" id="cropStage">
+        <div class="crop-mask"></div>
+        <div class="crop-frame">
+          <img id="cropperImage" draggable="false">
+        </div>
+      </div>
+      <div class="crop-controls">
+        <input type="range" id="cropZoom" min="0.1" max="3" step="0.01" value="1">
+      </div>
+    </div>
+    <footer class="modal-footer" style="border-top: 1px solid #333; background: #1a1a1a;">
+      <button type="button" class="btn secondary" id="btnCropCancel">Cancel</button>
+      <button type="button" class="btn primary" id="btnCropApply">Apply & Save</button>
+    </footer>
+  </div>
+</div>
+<script>
+(async function () {
+  const ADMIN_KEY_NAME = 'ADMIN_API_KEY';
+  const API_TEST_URL = 'http://127.0.0.1:8000/menu/admin/check';
+
+
+  async function requireAdminKey() {
+    while (true) {
+      const { value: key } = await Swal.fire({
+        title: 'Admin Access',
+        input: 'password',
+        inputLabel: 'Masukkan Password Admin',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        confirmButtonText: 'Masuk',
+        showLoaderOnConfirm: true,
+        preConfirm: async (inputKey) => {
+          try {
+            const res = await fetch(API_TEST_URL, {
+              method: 'GET',
+              headers: { 'X-API-Key': inputKey }
+            });
+
+            if (res.status === 401) {
+              throw new Error('Invalid');
+            }
+            if (!res.ok) {
+  throw new Error('Invalid');
+}
+
+
+            return inputKey;
+          } catch {
+            Swal.showValidationMessage('Password salah');
+            return false;
+          }
+        }
+      });
+
+      if (key) {
+        localStorage.setItem(ADMIN_KEY_NAME, key);
+        // Optional: Show success before reloading
+        await Swal.fire({
+          icon: 'success',
+          title: 'Akses Diterima',
+          timer: 1000,
+          showConfirmButton: false
+        });
+        return;
+      }
+    }
+  }
+
+  const key = localStorage.getItem(ADMIN_KEY_NAME);
+  if (!key) {
+    await requireAdminKey();
+  }
+
+
+})();
+</script>
+
+
+<script src="js/adminMenu.js"></script>
+
+</body>
+</html>

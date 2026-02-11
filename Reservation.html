@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin | Reservation</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inika:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/Reservation.css" />
+    <link rel="shortcut icon" href="assets/APS.png" type="image/x-icon">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body class="header-solid">
+
+<header class="site-header is-hero" id="siteHeader">
+  <div class="header-inner">
+    <a href="" class="logo">
+  <button id="adminLogout">Logout</button>
+
+</a>
+
+
+    <nav class="nav">
+      <a href="adminMenu.html">MENU</a>
+      <a href="adminLocations.html" >LOCATIONS</a>
+      <a href="adminEvent.html">EVENTS</a>
+        <a href="Reservation.html" class="is-active">RESERVATION</a>
+    </nav>
+
+    <div class="header-actions">
+      <h3 class="admin">ADMIN</h3>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<div class="page">
+<h1>Reservations</h1>
+
+
+<!-- FILTER & SORT -->
+<div class="controls">
+<!-- FILTER LEFT -->
+<input type="date" id="filterDate" />
+
+
+<select id="filterLocation">
+<option value="">All Locations</option>
+</select>
+
+
+<select id="filterStatus">
+<option value="">All Status</option>
+<option value="pending">Pending</option>
+<option value="confirmed">Confirmed</option>
+<option value="cancelled">Cancelled</option>
+</select>
+
+
+<!-- SORT RIGHT -->
+<select id="sortDate">
+<option value="desc">Date ↓</option>
+<option value="asc">Date ↑</option>
+</select>
+
+
+<select id="sortTime">
+<option value="asc">Time ↑</option>
+<option value="desc">Time ↓</option>
+</select>
+</div>
+
+    <div class="list" id="reservationList"></div>
+
+</main>
+<!-- ADD / EDIT MENU MODAL -->
+
+<script>
+(async function () {
+  const ADMIN_KEY_NAME = 'ADMIN_API_KEY';
+  const API_TEST_URL = 'http://127.0.0.1:8000/reservations/admin/check';
+
+
+  async function requireAdminKey() {
+    while (true) {
+      const { value: key } = await Swal.fire({
+        title: 'Admin Access',
+        input: 'password',
+        inputLabel: 'Masukkan Password Admin',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        confirmButtonText: 'Masuk',
+        showLoaderOnConfirm: true,
+        preConfirm: async (inputKey) => {
+          try {
+            const res = await fetch(API_TEST_URL, {
+              method: 'GET',
+              headers: { 'X-API-Key': inputKey }
+            });
+
+            if (res.status === 401) {
+              throw new Error('Invalid');
+            }
+            if (!res.ok) {
+  throw new Error('Invalid');
+}
+
+
+            return inputKey;
+          } catch {
+            Swal.showValidationMessage('Password salah');
+            return false;
+          }
+        }
+      });
+
+      if (key) {
+        localStorage.setItem(ADMIN_KEY_NAME, key);
+        // Optional: Show success before reloading
+        await Swal.fire({
+          icon: 'success',
+          title: 'Akses Diterima',
+          timer: 1000,
+          showConfirmButton: false
+        });
+
+        location.reload();
+        return;
+      }
+    }
+  }
+
+  const key = localStorage.getItem(ADMIN_KEY_NAME);
+  if (!key) {
+    await requireAdminKey();
+  }
+
+
+})();
+</script>
+
+
+<script src="js/Reservation.js"></script>
+
+</body>
+</html>

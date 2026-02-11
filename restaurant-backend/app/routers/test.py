@@ -1,0 +1,6 @@
+from supabase import create_client
+
+supabase = create_client("https://zvzpeyvkrtyjsbgmwusf.supabase.co/", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp2enBleXZrcnR5anNiZ213dXNmIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2ODU1NTA0OSwiZXhwIjoyMDg0MTMxMDQ5fQ.udjw_kGTnNBKzajGg4tBYl1cljIlT9wce4ASXaSvqGQ")
+
+buckets = supabase.storage.list_buckets()
+print(buckets)

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title> Admin | Locations</title>
+  <link rel="stylesheet" href="css/adminLocations.css" />
+  <link rel="shortcut icon" href="assets/APS.png" type="image/x-icon">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body class="header-solid">
+
+<header class="site-header is-scrolled" id="siteHeader">
+  <div class="header-inner">
+    <a href="" class="logo">
+  <button id="adminLogout">Logout</button>
+
+</a>
+    <nav class="nav">
+      <a href="adminMenu.html">MENU</a>
+      <a href="adminLocations.html" class="is-active">LOCATIONS</a>
+      <a href="adminEvent.html">EVENT</a>
+        <a href="Reservation.html">RESERVATION</a>
+    </nav>
+    <div class="header-actions">
+      <h3 class="admin">ADMIN</h3>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="stores">
+    <h2 class="stores-title">Our Stores</h2>
+    <div class="store-list" id="storeList">
+      </div>
+  </section>
+</main>
+
+<div class="modal" id="locationModal" aria-hidden="true">
+  <div class="modal-backdrop"></div>
+  <div class="modal-dialog">
+    <header class="modal-header">
+      <h2 id="modalTitle">Add Location</h2>
+    </header>
+    <form id="locationForm" class="modal-body">
+      <input type="hidden" id="locationId" />
+
+      <div class="form-grid">
+        <label>Store Name <input type="text" id="locationName" required /></label>
+        <label>Operating Hours <input type="text" id="locationHours" placeholder="09:00 - 22:00" required /></label>
+      </div>
+
+        <div class="form-grid">
+        <label>Phone Number <input type="text" placeholder=628..." id="PhoneNum" required /></label>
+      </div>
+
+      <label>Address <textarea id="locationAddress" rows="2" required></textarea></label>
+      <label>
+  Google Maps URL
+  <div style="display: flex; gap: 8px;">
+    <input type="url" id="locationMapsUrl" placeholder="Paste link here..." required style="flex: 1;" />
+    <button type="button" id="btnSyncCoords" class="btn" style="padding: 0 15px; background: #582C49; color: white;">Sync</button>
+  </div>
+</label>
+
+      <div class="form-grid">
+        <label>Latitude <input type="number" id="locationLat" step="any" required /></label>
+        <label>Longitude <input type="number" id="locationLng" step="any" required /></label>
+      </div>
+
+      <div class="form-grid">
+        <label>Rating <input type="number" id="locationRating" step="0.1" max="5" value="5.0" /></label>
+        <label>Review Count <input type="number" id="locationReviews" value="0" /></label>
+      </div>
+
+      <input type="url" id="locationImageUrl" style="display:none;" />
+      <label>Store Image <input type="file" id="locationImageFile" accept="image/*" /></label>
+      <div id="imagePreview" class="image-preview"></div>
+
+      <footer class="modal-footer">
+        <button type="button" class="btn secondary" id="btnLocationCancel">Cancel</button>
+        <button type="submit" class="btn primary">Save Location</button>
+      </footer>
+    </form>
+  </div>
+</div>
+
+<div class="modal" id="cropModal" aria-hidden="true" style="z-index: 3000;">
+  <div class="modal-backdrop"></div>
+  <div class="modal-dialog">
+    <header class="modal-header">
+      <h2 style="color: white; margin:0;">Adjust Store Image</h2>
+    </header>
+    <div class="modal-body" style="padding: 0; overflow: hidden;">
+      <div class="cropper-stage" id="cropStage">
+        <div class="crop-mask"></div>
+        <div class="crop-frame">
+          <img id="cropperImage" draggable="false">
+        </div>
+      </div>
+      <div class="crop-controls">
+        <input type="range" id="cropZoom" min="0.1" max="3" step="0.01" value="1">
+      </div>
+    </div>
+    <footer class="modal-footer" style="border-top: 1px solid #333; background: #1a1a1a;">
+      <button type="button" class="btn secondary" id="btnCropCancel">Cancel</button>
+      <button type="button" class="btn primary" id="btnCropApply">Apply & Save</button>
+    </footer>
+  </div>
+</div>
+<script>
+(async function () {
+  const ADMIN_KEY_NAME = 'ADMIN_API_KEY';
+  const API_TEST_URL = 'http://127.0.0.1:8000/locations/admin/check';
+
+
+  async function requireAdminKey() {
+    while (true) {
+      const { value: key } = await Swal.fire({
+        title: 'Admin Access',
+        input: 'password',
+        inputLabel: 'Masukkan Password Admin',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        confirmButtonText: 'Masuk',
+        showLoaderOnConfirm: true,
+        preConfirm: async (inputKey) => {
+          try {
+            const res = await fetch(API_TEST_URL, {
+              method: 'GET',
+              headers: { 'X-API-Key': inputKey }
+            });
+
+            if (res.status === 401) {
+              throw new Error('Invalid');
+            }
+            if (!res.ok) {
+  throw new Error('Invalid');
+}
+
+
+            return inputKey;
+          } catch {
+            Swal.showValidationMessage('Password salah');
+            return false;
+          }
+        }
+      });
+
+      if (key) {
+        localStorage.setItem(ADMIN_KEY_NAME, key);
+        // Optional: Show success before reloading
+        await Swal.fire({
+          icon: 'success',
+          title: 'Akses Diterima',
+          timer: 1000,
+          showConfirmButton: false
+        });
+        return;
+      }
+    }
+  }
+
+  const key = localStorage.getItem(ADMIN_KEY_NAME);
+  if (!key) {
+    await requireAdminKey();
+  }
+
+
+})();
+</script>
+<script src="js/adminLocations.js"></script>
+</body>
+</html>

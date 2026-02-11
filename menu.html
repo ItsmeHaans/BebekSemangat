@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bebek Semangat Menu</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inika:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/menu.css" />
+    <link rel="shortcut icon" href="assets/BS.png" type="image/x-icon">
+</head>
+<body class="header-solid">
+
+<header class="site-header is-hero" id="siteHeader">
+  <div class="header-inner">
+    <a href="index.html" class="logo">
+  <img
+    src="assets/logo.png"
+    data-default="assets/logo.png"
+    data-bw="assets/logobw.png"
+    alt="Seruni"
+    id="headerLogo"
+  />
+</a>
+
+
+    <nav class="nav">
+      <a href="index.html" >ABOUT US</a>
+      <a href="menu.html" class="is-active">MENU</a>
+        <a href="locations.html">LOCATIONS</a>
+      <a href="event.html">EVENT</a>
+    </nav>
+
+    <div class="header-actions">
+
+      <a href="index.html#reserve" class="btn btn-outline">Reserve</a>
+      <a href="index.html#footer" class="btn btn-outline">Order</a>
+    </div>
+  </div>
+</header>
+
+<main>
+
+    <section class="menu-section">
+  <div class="menu-layout">
+
+    <!-- LEFT: Categories -->
+    <aside class="menu-categories">
+      <button class="menu-cat is-active" data-target="main">Main Course</button>
+      <button class="menu-cat" data-target="side">Side Dishes</button>
+      <button class="menu-cat" data-target="snack">Snacks</button>
+      <button class="menu-cat" data-target="beverage">Beverages</button>
+    </aside>
+
+    <!-- RIGHT: Content -->
+    <div class="menu-content">
+
+      <!-- CATEGORY -->
+      <section id="main" class="menu-group fade-up">
+        <h2 class="menu-group-title">Main Course</h2>
+        <div class="menu-grid" data-category="main"></div>
+      </section>
+
+      <section id="side" class="menu-group fade-up">
+        <h2 class="menu-group-title">Side Dishes</h2>
+        <div class="menu-grid" data-category="side"></div>
+      </section>
+
+      <section id="snack" class="menu-group fade-up">
+        <h2 class="menu-group-title">Snacks</h2>
+        <div class="menu-grid" data-category="snack"></div>
+      </section>
+
+      <section id="beverage" class="menu-group fade-up">
+        <h2 class="menu-group-title">Beverages</h2>
+        <div class="menu-grid" data-category="beverage"></div>
+      </section>
+
+    </div>
+  </div>
+</section>
+
+</main>
+<button id="cart-fab" class="cart-fab">
+  🛒
+  <span id="cart-counter" class="cart-badge">0</span>
+</button>
+<div id="cart-drawer" class="cart-drawer">
+  <div class="cart-header">
+    <h3>Your Order</h3>
+    <button id="close-cart">✕</button>
+  </div>
+
+  <div id="cart-items" class="cart-items">
+    <!-- items injected by JS -->
+  </div>
+
+  <button href="index.html#reserve" id="confirm-order-btn" class="confirm-btn" >
+  Confirm Order
+</button>
+
+</div>
+<footer class="footer" id="footer">
+  <div class="footer-top fade-up" data-delay="200">
+    <!-- LEFT -->
+    <div class="footer-col">
+      <h3 class="footer-title">Find Us On</h3>
+      <ul class="footer-list">
+        <li><a href="https://www.instagram.com/p/DTdHRkRD3-g/">Instagram</a></li>
+        <li><a href="https://www.tiktok.com/@wangiseruni?is_from_webapp=1&sender_device=pc">TikTok</a></li>
+      </ul>
+    </div>
+
+    <!-- MIDDLE -->
+    <div class="footer-col">
+      <h3 class="footer-title">Explore</h3>
+      <ul class="footer-list">
+        <li><a href="menu.html">Menu</a></li>
+        <li><a href="index.html#loc">Locations</a></li>
+        <li><a href="index.html#reserve">Reservations</a></li>
+      </ul>
+    </div>
+
+      <!-- MIDDLE -->
+    <div class="footer-col">
+      <h3 class="footer-title">Order Us On</h3>
+      <ul class="footer-list">
+        <li><a href="https://gofood.co.id/semarang/restaurant/kedai-amarta-pleburan-67bcccdd-225b-4b9c-ac16-be48555b57c3">GoFood</a></li>
+      </ul>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="footer-col footer-right">
+      <img src="assets/footer.png" alt="Hatur Nuhun" class="footer-image" />
+    </div>
+  </div>
+
+  <!-- DIVIDER -->
+  <div class="footer-divider fade-up" data-delay="200"></div>
+
+  <!-- BOTTOM -->
+  <div class="footer-bottom fade-up" data-delay="200">
+  <img src="assets/logobw.png" class="footer-logo" alt="Seruni Logo">
+  <img src="assets/footer.png" class="footer-logo-mobile" alt="Seruni Footer">
+</div>
+
+</footer>
+
+<div id="toast-container"></div>
+
+<div id="cart-overlay" class="cart-overlay"></div>
+
+<script>
+<!--  window.__API_BASE__ = "https://api.kedaiamarta.com";-->
+</script>
+
+<script src="js/menu.js"></script>
+
+</body>
+</html>

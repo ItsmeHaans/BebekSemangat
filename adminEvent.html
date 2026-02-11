@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin | Events</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inika:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Shared Admin Styles -->
+  <link rel="stylesheet" href="css/event.css"> <!-- reuse where possible -->
+  <link rel="stylesheet" href="css/adminEvent.css"> <!-- event-specific -->
+
+  <link rel="shortcut icon" href="assets/APS.png" type="image/x-icon">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</head>
+<body>
+
+<header class="site-header is-scrolled" id="siteHeader">
+  <div class="header-inner">
+    <a class="logo">
+  <button id="adminLogout">Logout</button>
+
+</a>
+    <nav class="nav">
+      <a href="adminMenu.html">MENU</a>
+      <a href="adminLocations.html" >LOCATIONS</a>
+      <a href="adminEvent.html" class="is-active">EVENT</a>
+        <a href="Reservation.html">RESERVATION</a>
+    </nav>
+    <div class="header-actions">
+      <h3 class="admin">ADMIN</h3>
+    </div>
+  </div>
+</header>
+
+
+<main>
+  <section class="stores">
+
+    <!-- Header row -->
+    <div class="stores-header">
+      <h2 class="stores-title">Customer Events</h2>
+
+      <button class="btn primary" id="btnAddEvent">
+        + Add Event
+      </button>
+    </div>
+
+  </section>
+    <section class="event-section">
+  <!-- Sticky Search -->
+   <header class="event-search">
+    <input
+      type="text"
+      id="eventSearch"
+      placeholder="Search for Events"
+      aria-label="Search Events"
+    />
+  </header>
+
+  <!-- Scrollable Content -->
+  <div class="event-scroll" id="eventList">
+    <!-- Event cards injected by JS -->
+  </div>
+</section>
+
+</main>
+
+<!-- =========================
+     EVENT MODAL (ADD / EDIT)
+========================= -->
+<div class="modal" id="eventModal" aria-hidden="true">
+  <div class="modal-backdrop"></div>
+
+  <div class="modal-dialog">
+    <header class="modal-header">
+      <h2 id="eventModalTitle">Add Event</h2>
+    </header>
+
+    <form id="eventForm" class="modal-body">
+      <input type="hidden" id="eventId" />
+
+      <label>
+        Event Title
+        <input type="text" id="eventTitle" required />
+      </label>
+
+      <label>
+        Description
+        <textarea id="eventDescription" rows="3"></textarea>
+      </label>
+
+      <div class="form-grid">
+        <label>
+          Start Date
+          <input type="date" id="eventStartDate" required />
+        </label>
+
+        <label>
+          End Date
+          <input type="date" id="eventEndDate" required />
+        </label>
+      </div>
+
+      <label>
+        Detail Link (optional)
+        <input
+          type="url"
+          id="eventDetailLink"
+          placeholder="https://..."
+        />
+      </label>
+
+      <!-- Image -->
+      <input type="url" id="eventImageUrl" hidden />
+
+      <label>
+        Cover Image
+        <input type="file" id="eventImageFile" accept="image/*" />
+      </label>
+
+      <div id="eventImagePreview" class="image-preview"></div>
+
+      <footer class="modal-footer">
+        <button
+          type="button"
+          class="btn secondary"
+          id="btnEventCancel"
+        >
+          Cancel
+        </button>
+        <button type="submit" class="btn primary">
+          Save Event
+        </button>
+      </footer>
+    </form>
+  </div>
+</div>
+
+<!-- =========================
+     IMAGE CROP MODAL (REUSE)
+========================= -->
+<div class="modal" id="cropModal" aria-hidden="true" style="z-index: 3000;">
+  <div class="modal-backdrop"></div>
+  <div class="modal-dialog">
+    <header class="modal-header">
+      <h2 style="color: white; margin:0;">Adjust Store Image</h2>
+    </header>
+    <div class="modal-body" style="padding: 0; overflow: hidden;">
+      <div class="cropper-stage" id="cropStage">
+        <div class="crop-mask"></div>
+        <div class="crop-frame">
+          <img id="cropperImage" draggable="false">
+        </div>
+      </div>
+      <div class="crop-controls">
+        <input type="range" id="cropZoom" min="0.1" max="3" step="0.01" value="1">
+      </div>
+    </div>
+    <footer class="modal-footer" style="border-top: 1px solid #333; background: #1a1a1a;">
+      <button type="button" class="btn secondary" id="btnCropCancel">Cancel</button>
+      <button type="button" class="btn primary" id="btnCropApply">Apply & Save</button>
+    </footer>
+  </div>
+</div>
+
+<script>
+(async function () {
+  const ADMIN_KEY_NAME = 'ADMIN_API_KEY';
+  const API_TEST_URL = 'http://127.0.0.1:8000/events/admin/check';
+
+
+  async function requireAdminKey() {
+    while (true) {
+      const { value: key } = await Swal.fire({
+        title: 'Admin Access',
+        input: 'password',
+        inputLabel: 'Masukkan Password Admin',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        confirmButtonText: 'Masuk',
+        showLoaderOnConfirm: true,
+        preConfirm: async (inputKey) => {
+          try {
+            const res = await fetch(API_TEST_URL, {
+              method: 'GET',
+              headers: { 'X-API-Key': inputKey }
+            });
+
+            if (res.status === 401) {
+              throw new Error('Invalid');
+            }
+            if (!res.ok) {
+  throw new Error('Invalid');
+}
+
+
+            return inputKey;
+          } catch {
+            Swal.showValidationMessage('Password salah');
+            return false;
+          }
+        }
+      });
+
+      if (key) {
+        localStorage.setItem(ADMIN_KEY_NAME, key);
+        // Optional: Show success before reloading
+        await Swal.fire({
+          icon: 'success',
+          title: 'Akses Diterima',
+          timer: 1000,
+          showConfirmButton: false
+        });
+        return;
+      }
+    }
+  }
+
+  const key = localStorage.getItem(ADMIN_KEY_NAME);
+  if (!key) {
+    await requireAdminKey();
+  }
+
+
+})();
+</script>
+<script src="js/adminEvent.js"></script>
+</body>
+</html>

@@ -1,0 +1,1964 @@
+/* ======================================================
+   ROOT VARIABLES
+====================================================== */
+:root {
+  --body-bg: #FFE3A5;
+  --purple: #E3441A;
+  --white: #FFE3A5;
+  --header-height: 88px;
+  --transition: 400ms ease-out;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+/* ======== Scroll ======== */
+/* Modern Firefox & Standard support */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--purple) transparent;
+}
+
+/* Chrome, Edge, and Safari support */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--purple);
+  border-radius: 20px; /* Matches the rounded aesthetic of your buttons */
+  border: 2px solid var(--body-bg); /* Adds padding around the thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #432137; /* Slightly darker shade on hover */
+}
+/* ======================================================
+   BRAND
+====================================================== */
+/* ================= BRAND REVEAL ================= */
+#brandReveal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+
+  background: #111;
+  overflow: hidden;
+
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+/* gambar FULL layar */
+#brandReveal .brand-image {
+  position: absolute;
+  inset: 0;
+
+  background-image: url("../assets/logopage.png");
+  background-size: cover;      /* 🔑 no space kosong */
+  background-position: center; /* tetap proporsional */
+  background-repeat: no-repeat;
+}
+
+/* active */
+#brandReveal.is-active {
+  opacity: 1;
+  pointer-events: auto;
+}
+/* keadaan awal (hidden) */
+#brandReveal {
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% 0,
+    0 0
+  );
+  transition:
+    clip-path 0.9s cubic-bezier(.77,0,.18,1),
+    opacity 0.4s ease;
+}
+
+/* TIRAI KEBUKA */
+#brandReveal.is-active {
+  opacity: 1;
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% 100%,
+    0 100%
+  );
+}
+
+/* TIRAI DITARIK KE ATAS */
+#brandReveal.is-closing {
+  clip-path: polygon(
+    50% 0,
+    50% 0,
+    50% 0,
+    50% 0
+  );
+}
+
+/* ======================================================
+   BASE RESET
+====================================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inika', serif;
+  background-color: var(--body-bg);
+  color: var(--purple);
+}
+/* ================= BRAND REVEAL ================= */
+#brandReveal {
+  position: fixed;
+  inset: 0;
+  background: #111; /* bisa transparan kalau mau */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-30px) scale(0.98);
+
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s cubic-bezier(.22,.61,.36,1);
+}
+
+#brandReveal img {
+  max-width: 60vw;
+  max-height: 60vh;
+  object-fit: contain;
+}
+
+/* ACTIVE */
+#brandReveal.is-active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+
+/* ======================================================
+   HEADER
+====================================================== */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  height: var(--header-height);
+  transition: background var(--transition),
+              backdrop-filter var(--transition),
+              box-shadow var(--transition);
+}
+
+/* Header container */
+.header-inner {
+  max-width: 1200px;
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  display: grid;
+  /* 1fr (Logo) | auto (Nav) | 1fr (Actions) */
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 2rem;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.logo img {
+  height: 65px;
+  transition: opacity var(--transition);
+  position: absolute; /* This allows 'left' to work */
+  left: 10px;
+}
+
+
+/* Navigation */
+.nav {
+  display: flex;
+  gap: 2rem;
+}
+
+.nav a {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.925rem;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  color: var(--purple);
+  white-space: nowrap;
+}
+.nav a {
+  position: relative;
+}
+
+.nav a.is-active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 100%;
+  height: 2px;
+  background-color: currentColor;
+}
+
+
+/* Action buttons */
+.header-actions {
+  display: flex;
+  gap: 0.75rem;
+
+  /* Positioning Logic */
+  position: absolute;
+  right: 10px; /* Exact distance from the right edge */
+  transform: translateY(-50%); /* Keeps it vertically centered in the header */
+  transition: opacity var(--transition), transform var(--transition);
+
+}
+
+.btn {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  padding: 0.6rem 1.2rem;
+  border-radius: 999px;
+  text-decoration: none;
+}
+
+.btn-outline {
+  border: 1px solid var(--purple);
+  color: var(--purple);
+}
+
+/* ======================================================
+   HEADER STATES
+====================================================== */
+
+/* HERO STATE */
+.site-header.is-hero {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(14px);
+}
+
+.site-header.is-hero .header-actions {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-6px);
+}
+
+/* SCROLLED STATE */
+.site-header.is-scrolled {
+  background: var(--body-bg);
+  backdrop-filter: none;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+.site-header.is-scrolled .header-actions {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+/* ======================================================
+   TRUST – REFINED LAYOUT
+====================================================== */
+
+.trust {
+  background: var(--body-bg);
+  padding: 52px 0px;
+}
+
+.trust__container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Title */
+.trust__title {
+  font-family: "Inika", serif;
+  font-weight: 700;
+  font-size: 56px;
+  color: var(--purple);
+  text-align: center;
+  text-decoration: underline;
+  margin-bottom: 40px;
+}
+
+/* Item base */
+.trust__item {
+  background: var(--purple);
+  border-radius: 28px;
+  padding: 15px 15px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 40px;
+
+  max-width: 1050px; /* prevents over-wide cards */
+}
+
+/* LEFT items */
+.trust__item--left {
+  margin-right: auto; /* stick to left edge */
+}
+
+/* RIGHT items */
+.trust__item--right {
+  text-align: right;
+  margin-left: auto;
+  margin-right: 0;
+  justify-content: flex-end;
+
+}
+.trust__item--right .trust__text {
+  order: 1;
+}
+
+.trust__item--right .trust__image {
+  order: 2;
+}
+
+
+/* Image */
+.trust__image {
+  width: 84px;
+  height: 84px;
+  object-fit: contain;
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+
+/* Text */
+.trust__text {
+  font-family: "Inika", serif;
+  font-weight: 400;
+  font-size: 22px;
+  color: var(--white);
+  line-height: 1.4;
+  max-width: 820px;
+}
+
+/* ======================================================
+   TRUST ANIMATION BASE
+====================================================== */
+.trust__item {
+  opacity: 0;
+  transition: opacity var(--transition), transform var(--transition);
+}
+
+/* Direction offsets */
+.trust__item--left {
+  transform: translateX(-40px);
+}
+
+.trust__item--right {
+  transform: translateX(40px);
+}
+
+/* Visible state */
+.trust__item.is-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+
+/* ======================================================
+   TABLET
+====================================================== */
+@media (max-width: 1024px) {
+  .trust__title {
+    font-size: 44px;
+    margin-bottom: 56px;
+  }
+
+  .trust__item {
+    padding: 28px 32px;
+    max-width: 900px;
+  }
+
+  .trust__text {
+    font-size: 24px;
+    max-width: 720px;
+  }
+  .trust__item--left,
+  .trust__item--right {
+    transform: translateY(24px);
+  }
+
+  .trust__item.is-visible {
+    transform: translateY(0);
+  }
+}
+
+/* ======================================================
+   MOBILE
+====================================================== */
+@media (max-width: 768px) {
+  .trust {
+    padding: 56px 16px;
+  }
+
+  .trust__title {
+    font-size: 32px;
+    margin-bottom: 30px;
+  }
+
+  .trust__item {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+
+    padding: 16px 16px;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 100%;
+  }
+
+  .trust__item--left,
+  .trust__item--right {
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .trust__item--right {
+  flex-direction: row-reverse;
+  text-align: right;
+}
+.trust__item--left {
+  flex-direction: row-reverse;
+  text-align: left;
+}
+
+
+  .trust__image {
+    width: 68px;
+    height: 68px;
+  }
+
+  .trust__text {
+    font-size: 16px;
+    line-height: 1.2;
+    max-width: 720px;
+  }
+  .trust__item--left,
+  .trust__item--right {
+    transform: translateY(24px);
+  }
+
+  .trust__item.is-visible {
+    transform: translateY(0);
+  }
+}
+
+/* ======================================================
+   HERO SECTION
+====================================================== */
+
+.hero {
+  position: relative;
+  height: 100vh;
+  height: 645px;
+  overflow: hidden;
+}
+
+/* Background video */
+.hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Dark overlay for contrast */
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+/* Centered content */
+.hero-content {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0 1.5rem;
+  text-align: center;
+  color: var(--purple);
+}
+
+/* Logo */
+.hero-logo {
+  width: min(550px, 100%);
+  margin-bottom: 2rem;
+  /* Increase these values for a bigger logo */
+  width: 1200px;          /* Increased from 550px */
+  max-width: 90vw;       /* Ensures it doesn't break on small screens */
+  height: auto;
+}
+
+/* CTA buttons wrapper */
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+/* Buttons base */
+.hero-btn {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.875rem;
+  letter-spacing: 0.12em;
+  padding: 0.75rem 1.75rem;
+  border-radius: 999px;
+  text-decoration: none;
+  transition: background 300ms ease-out,
+              color 300ms ease-out,
+              transform 300ms ease-out;
+}
+
+/* Primary button */
+.hero-btn--primary {
+  background: var(--purple);
+  color: #FFFBFE;
+}
+
+.hero-btn--primary:hover {
+  transform: translateY(-2px);
+}
+
+/* Outline button */
+.hero-btn--outline {
+  border: 1px solid var(--purple);
+  color: var(--purple);
+  background: transparent;
+}
+
+.hero-btn--outline:hover {
+  background: rgba(88, 44, 73, 0.08);
+}
+
+/* Bottom tagline */
+.hero-tagline {
+  font-family: 'Inria Serif', serif;
+  font-size: 24px;
+  letter-spacing: 0.14em;
+  margin: 0;
+  font-weight: 700;
+}
+
+/* ======================================================
+   RESPONSIVE
+====================================================== */
+
+@media (min-width: 768px) {
+  .hero-logo {
+    width: 600px;
+    margin-bottom: 0rem;
+  }
+
+  .hero-btn {
+    font-size: 0.9rem;
+    margin-bottom: 0rem;
+  }
+}
+
+
+/* ======================================================
+   CONTENT
+====================================================== */
+.content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 5rem 1.5rem;
+}
+
+/* ======================================================
+   RESPONSIVE
+====================================================== */
+@media (max-width: 768px) {
+  .header-inner {
+   display: grid;
+    /* This creates 3 equal-width zones */
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 0; /* Reduced gap to prevent squeezing */
+    padding: 0 1rem;
+    padding-left: 20px;
+  }
+
+  .nav {
+    /* This ensures your 2x2 grid nav stays in the center column */
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.2rem;
+    justify-content: center;
+  }
+  .header-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.4rem;
+    justify-items: end;
+
+  }
+
+  .header-actions .btn {
+    min-width: 72px;
+    text-align: center;
+    padding: 0.5rem 0.9rem;
+    font-size: 13px;
+    padding-right: 10px;
+
+  }
+  /* Make sure the logo doesn't push the nav over */
+  .logo img {
+    height: 40px;
+  }
+
+
+   .hero-tagline {
+      font-size: 18px;
+    }
+   .nav a {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.725rem;
+      letter-spacing: 0.08em;
+      text-decoration: none;
+      color: var(--purple);
+      white-space: nowrap;
+    }
+}
+@media (max-width: 768px) {
+  .nav {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem 0.75rem;
+    overflow: visible;
+    text-align: center;
+  }
+
+  .nav a {
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    white-space: normal;
+  }
+}
+/* ======================================================
+   FADE-UP ANIMATION (ON SCROLL)
+====================================================== */
+
+/* Default visible state (no JS fallback) */
+.fade-up {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Enhanced state (JS-enabled browsers only) */
+.js .fade-up {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 500ms ease-out,
+    transform 500ms ease-out;
+}
+
+/* When element becomes visible */
+.fade-up.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Optional stagger support */
+.fade-up[data-delay] {
+  transition-delay: var(--delay, 0ms);
+}
+/* ======================================================
+   CONTENT 1 SECTION
+====================================================== */
+
+.content-1 {
+  background-color: var(--purple);
+  padding: 5rem 1.5rem;
+}
+
+.content-1-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+  align-items: center;
+}
+
+/* Image */
+.content-1-media img {
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+  display: block;
+}
+
+/* Text block */
+.content-1-text {
+  color: var(--white);
+}
+
+/* Title */
+.content-1-text h2 {
+  font-family: 'Inika', serif;
+  font-weight: 700;
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  margin: 0 0 1.25rem 0;
+}
+
+/* Body text */
+.content-1-text p {
+  font-family: 'Inika', serif;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.7;
+  margin: 0;
+  max-width: 520px;
+}
+
+/* ======================================================
+   RESPONSIVE
+====================================================== */
+
+@media (min-width: 768px) {
+  .content-1-inner {
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+  }
+
+  .content-1-media img {
+    margin: 0;
+  }
+}
+/* ======================================================
+   CONTENT 1 — GRID REFINED (FIGMA-DRIVEN)
+====================================================== */
+
+.content-1 {
+  background-color: var(--purple);
+  padding: 6rem 1.5rem;
+}
+
+/* Main grid container */
+.content-1-grid {
+  max-width: 800px;          /* Matches Figma width */
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  column-gap: 4rem;
+  row-gap: 3rem;
+  align-items: center;
+}
+
+/* Media column */
+.content-1-media {
+  display: flex;
+  justify-content: center;
+}
+
+.content-1-media img {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+}
+
+/* Text column */
+.content-1-text {
+  color: var(--white);
+}
+
+/* Title */
+.content-1-text h2 {
+  font-family: 'Inika', serif;
+  font-weight: 700;
+  font-size: 2.1rem;
+  line-height: 1.25;
+  margin: 0 0 1.5rem 0;
+}
+
+/* Body text */
+.content-1-text p {
+  font-family: 'Inika', serif;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.75;
+  margin: 0;
+  max-width: 420px;
+}
+
+/* ======================================================
+   RESPONSIVE — MOBILE FIRST, DESKTOP CONTROLLED
+====================================================== */
+
+@media (max-width: 768px) {
+  .content-1 {
+    padding: 4.5rem 1.5rem;
+  }
+
+  .content-1-grid {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .content-1-media img {
+    max-width: 240px;
+  }
+
+  .content-1-text p {
+    margin: 0 auto;
+  }
+}
+/* ======================================================
+   CONTENT 1 — GRID-BASED SECTION
+====================================================== */
+
+.content-1 {
+  background-color: var(--white);
+  padding: 0; /* remove upper & lower gap */
+ overflow: hidden;
+}
+
+/* Grid wrapper */
+.content-1-grid {
+  max-width: 100%;
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: 1fr; /* mobile-first */
+  align-items: stretch; /* ensure equal height columns */
+}
+
+/* ================= IMAGE COLUMN ================= */
+
+.content-1-media {
+  background-color: var(--white);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-right: 2.5rem; /* ADD right padding */
+  padding-left: 10%;
+}
+
+.content-1-media img {
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  justify-content: center;
+  align-items: center;
+  padding-top: 30px;
+}
+
+/* ================= RIGHT COLUMN (CONTENT PANEL) ================= */
+
+.content-1-panel {
+  background-color: var(--purple);
+  color: var(--white);
+
+  max-width: 100%;
+  padding-left: 2rem; /* LEFT padding only */
+  padding-bottom: 2rem; /* LEFT padding only */
+  padding-left: 15%;
+}
+
+/* Title */
+.content-1-panel h2 {
+  font-family: 'Inika', serif;
+  font-weight: 700;
+  font-size: 30px;
+  max-width: 80%;
+}
+
+/* Body */
+.content-1-panel p {
+  font-family: 'Inika', serif;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 1.75;
+  margin: 0;
+  max-width: 80%;
+}
+
+/* ======================================================
+   DESKTOP GRID (FIGMA RATIO)
+====================================================== */
+
+@media (min-width: 1024px) {
+  .content-1-grid {
+    grid-template-columns: 41.6% 58.4%;
+  }
+  .content-1-media {
+
+  padding-right: 2.5rem; /* ADD right padding */
+ }
+ .content-1-panel h2 {
+  font-family: 'Inika', serif;
+  font-weight: 700;
+  font-size: 33px;
+  margin: 0 0 0.5rem 0;
+}
+    .content-1-panel {
+      background-color: var(--purple);
+      color: var(--white);
+
+      padding: 4rem 0rem 4rem 4rem; /* LEFT padding only */
+      max-width: 100%;
+
+
+    }
+
+    .content-1-media img {
+      width: 100%;
+      max-width: 420px;
+      height: auto;
+      justify-content: center;
+      align-items: center;
+      padding-top: 0px;
+    }
+}
+
+/* ======================================================
+   CONTENT 2 — MENU SECTION
+====================================================== */
+
+.content-2 {
+  background-color: var(--white);
+  padding: 0rem 1.5rem; /* upper & lower gap */
+  padding-bottom: 2.5rem;
+}
+
+.content-2-grid {
+  max-width: 1280px;
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+  gap: 3rem;
+}
+
+/* ================= TEXT ================= */
+
+.content-2-text {
+  color: var(--purple);
+}
+
+.content-2-text h2 {
+  font-family: 'Inika', serif;
+  font-weight: 700;
+  font-size: 37px;
+  margin-bottom: 0rem;
+}
+
+.content-2-text p {
+  font-family: 'Inika', serif;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 1.75;
+  max-width: 480px;
+  margin-bottom: 1 rem;
+}
+
+/* ================= BUTTON ================= */
+
+.btn-primary {
+  display: inline-block;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+
+  padding: 0.75rem 1.5rem;
+  border-radius: 999px;
+
+  background-color: var(--purple);
+  color: #ffffff;
+  text-decoration: none;
+
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
+
+/* ================= IMAGE ================= */
+
+.content-2-media {
+  display: flex;
+  justify-content: center;
+}
+
+.content-2-media img {
+  width: 100%;
+  max-width: 460px;
+  border-radius: 20px;
+  object-fit: cover;
+}
+
+/* ======================================================
+   DESKTOP
+====================================================== */
+
+@media (min-width: 1024px) {
+  .content-2-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+  }
+
+  .content-2-media {
+    justify-content: flex-end;
+  }
+  .content-2-text {
+  color: var(--purple);
+}
+
+.content-2-text h2 {
+  font-family: 'Inika', serif;
+  font-weight: 700;
+  font-size: 40px;
+  margin-bottom: -1rem;
+}
+
+ .content-2-text p {
+  font-family: 'Inika', serif;
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 1.45;
+  max-width: 550px;
+  margin-bottom: 0.5rem;
+ }
+ .btn-primary {
+
+  font-size: 18px;
+
+ }
+}
+
+.footer {
+  background-color: var(--purple); /* purple */
+  color: white;
+  font-family: 'Inika', serif;
+   padding: 48px 50px 28px;
+}
+
+/* ================= TOP GRID ================= */
+.footer-top {
+  display: grid;
+  grid-template-columns: 0.5fr 0.5fr 0.5fr 1.5fr;
+  align-items: start;
+}
+
+/* COLUMNS */
+.footer-col {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* TITLES */
+.footer-title {
+  font-weight: 700;
+  font-size: 24px;
+  margin-bottom: 0px;
+}
+
+/* LIST */
+.footer-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-list li {
+  margin-bottom: 10px;
+}
+
+.footer-list a {
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+  opacity: 0.9;
+  transition: opacity 0.2s ease;
+}
+
+.footer-list a:hover {
+  opacity: 1;
+}
+
+/* RIGHT IMAGE */
+.footer-right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  margin-top: -30px; /* move upward */
+}
+.footer-image {
+  max-width: 50%;
+  margin-left: auto;
+  width: auto;
+  display: block;
+  margin-bottom: -30px; /* move upward */
+}
+
+/* ================= DIVIDER ================= */
+.footer-divider {
+  margin: 40px 0 40px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* ================= BOTTOM ================= */
+.footer-bottom {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.footer-logo {
+  height: 70px;
+  width: auto;
+  display: block;
+}
+
+/* ================= MOBILE ================= */
+@media screen and (max-width: 768px) {
+  .footer {
+    padding: 60px 24px 32px;
+  }
+
+  .footer-top {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .footer-right {
+    justify-content: center;
+  }
+
+  .footer-divider {
+    margin: 40px 0 32px;
+  }
+  /* Hide right illustration */
+  .footer-right {
+    display: none;
+  }
+
+  .footer-logo {
+    display: none;
+  }
+
+  .footer-logo-mobile {
+    display: block;
+    height: 80px;
+    width: auto;
+    margin: 0 auto;
+  }
+}
+.footer-logo-mobile {
+  display: none;
+}
+
+
+/* ======================================================
+   CONTENT 3 — LOCATIONS
+====================================================== */
+
+.content-3 {
+  background-color: var(--purple);
+  padding: 2rem 1.5rem; /* Balanced padding for centering */
+  color: var(--white);
+}
+
+/* Remove max-width here if you want the header to hit the screen edges */
+.content-3-inner {
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* ================= HEADER ================= */
+
+.content-3-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  padding: 0 20px; /* 20px from screen edges */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.content-3-header h2 {
+  font-family: 'Inika', serif;
+  font-weight: 700;
+  font-size: 42px;
+  margin: 0;
+}
+
+.content-3-btn {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.0rem;
+  letter-spacing: 0.08em;
+  padding: 0.6rem 1.2rem;
+  border-radius: 999px;
+  background: var(--white);
+  color: var(--purple);
+  text-decoration: none;
+}
+
+/* ================= GRID ================= */
+
+.content-3-grid {
+  display: grid;
+  /* Reduced minmax to 320px to match your image max-width */
+  grid-template-columns: repeat(3, 320px);
+  justify-content: center;
+  gap: 8rem; /* Increased gap to keep cards apart since containers are now narrower */
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ================= CARD ================= */
+
+.location-card {
+  display: flex; /* Changed to flex for better alignment control */
+  flex-direction: column;
+  align-items: flex-start; /* Aligns everything (img, h3, p) to the left */
+  text-decoration: none;
+  color:  var(--white);
+  transition: transform 300ms ease, opacity 300ms ease;
+  width: 100%;
+}
+
+.location-card:hover {
+  transform: translateY(-4px);
+  opacity: 0.95;
+}
+
+.location-card img {
+  width: 100%;
+  max-width: 320px; /* Your desired image width */
+  border-radius: 20px;
+  margin-bottom: 1.05rem;
+  display: block;
+}
+
+/* Card title */
+.location-card h3 {
+  font-family: 'Inika', serif;
+  font-weight: 700;
+  font-size: 32px;
+  margin: 0 0 0.3rem;
+  text-align: left; /* Aligns with the left edge of the image */
+}
+
+/* Card text */
+.location-card p {
+  font-family: 'Inika', serif;
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 1.6;
+  margin: 0;
+  text-align: left; /* Aligns with the left edge of the image */
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 768px) {
+
+  /* 1. HEADER STACKING */
+  .content-3-header {
+    flex-direction: column; /* Stack vertically instead of side-by-side */
+    align-items: center;
+    text-align: center;
+    gap: 1rem;
+    padding: 0 20px; /* Keep your 20px safety margin from the screen edge */
+  }
+
+  .content-3-header h2 {
+    order: 1; /* Title on top */
+    font-size: 32px; /* Adjusted size for smaller screens */
+  }
+
+  .content-3-btn {
+    order: 2; /* Button below */
+  }
+
+  /* 2. GRID ADJUSTMENT */
+  .content-3-grid {
+    grid-template-columns: 1fr; /* Switch from 2 columns to 1 column */
+    gap: 3rem;
+    padding: 0 20px;
+    justify-items: center; /* Ensure the card container is centered in the grid */
+  }
+
+  /* 3. CARD CONTENT ALIGNMENT */
+  .location-card {
+    align-items: center;  /* Forces flex children (img, h3, p) to center */
+    text-align: center;   /* Centers the text lines */
+    max-width: 320px;     /* Matches image width to keep it tight */
+    margin: 0 auto;       /* Centers the whole card box */
+  }
+
+  .location-card img {
+    margin: 0 auto 1.05rem; /* Center the image within the card */
+  }
+
+  .location-card h3 {
+    text-align: center;   /* Overrides the desktop 'left' alignment */
+    width: 100%;
+  }
+
+  .location-card p {
+    text-align: center;   /* Overrides the desktop 'left' alignment */
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+/* Sembunyikan kartu dengan class ini pada layar di bawah 768px */
+@media (max-width: 767px) {
+  .hide-on-mobile {
+    display: none;
+  }
+}
+/* ======================================================
+   CONTENT 4 — RESERVATION FORM
+====================================================== */
+
+.content-4 {
+  padding: 0.5rem 1.5rem 5rem;
+}
+
+.content-4-inner {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* ================= HEADER ================= */
+
+.content-4-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.content-4-header h2 {
+  font-family: 'Inika', serif;
+  font-weight: 700;
+  font-size: 42px;
+  color: var(--purple);
+  margin-bottom: 0.55rem;
+}
+
+.content-4-header p {
+  font-family: 'Inika', serif;
+  font-size: 22px;
+  color: var(--purple);
+  opacity: 0.9;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+/* ================= FORM ================= */
+
+.reserve-form {
+  background:  #FCF8C6;
+  border-radius: 28px;
+  padding: 2.5rem 2.5rem 3rem;
+  box-shadow: 0 30px 60px rgba(88, 44, 73, 0.08);
+}
+
+/* Grid */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem 2.5rem;
+  margin-bottom: 2.5rem;
+}
+
+/* Field */
+.form-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-field label {
+  font-family: 'Inika', serif;
+  font-size: 16px;
+  color: var(--purple);
+  margin-bottom: 0.5rem;
+}
+
+/* Input & Select */
+.form-field input,
+.form-field select {
+  font-family: 'Inika', serif;
+  font-size: 16px;
+  padding: 0.8rem 1rem;
+  border-radius: 14px;
+  border: none;
+  background: #E0E0E0;
+  color: var(--purple);
+  outline: none;
+  width: 100%;           /* Force it to respect the grid column width */
+  max-width: 100%;       /* Prevent it from pushing outward */
+  text-overflow: ellipsis;
+}
+
+/* Focus */
+.form-field input:focus,
+.form-field select:focus {
+  box-shadow: 0 0 0 2px rgba(88, 44, 73, 0.35);
+}
+.form-field select {
+  max-height: 240px;
+  overflow-y: auto;
+}
+/* Custom styling for the time dropdown */
+#time {
+  appearance: none; /* Removes the default browser arrow */
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23582c49' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1em;
+  padding-right: 2.5rem; /* Space for the new arrow */
+  cursor: pointer;
+}
+
+/* Optional: Style the dropdown list items */
+#time option {
+  background: var(--white);
+  color: var(--purple);
+  font-family: 'Inika', serif;
+}
+/* INFO BOX */
+.info-box {
+  justify-content: center;
+  padding: 16px 18px;
+
+  background: rgba(34, 74, 84, 0.08);
+  border-radius: 16px;
+
+  font-family: "Inika", serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--purple);
+}
+
+.info-box p {
+  margin: 0;
+}
+
+.info-box p + p {
+  margin-top: 8px;
+}
+/* ================= BUTTON ================= */
+
+.reserve-btn {
+  display: block;
+  margin: 0 auto;
+  padding: 0.85rem 2.5rem;
+  border-radius: 999px;
+  border: none;
+
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  letter-spacing: 0.12em;
+
+  background: var(--purple);
+  color:  var(--white);
+  cursor: pointer;
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+
+.reserve-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(88, 44, 73, 0.3);
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem 1.5rem;
+  }
+
+  .content-4-header h2 {
+    font-size: 32px;
+  }
+
+  .content-4-header p {
+    font-size: 16px;
+  }
+}
+/* Mobile Responsive Adjustments */
+@media (max-width: 768px) {
+  .form-field select {
+    /* Ensure the text cuts off cleanly with dots (...) */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+
+/* ================= MODAL ================= */
+
+/* THIS IS THE CRITICAL FIX */
+.modal-overlay[hidden] {
+  display: none !important;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex; /* This was overriding the 'hidden' attribute before */
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.modal {
+  background: var(--white);
+  border-radius: 24px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 420px;
+  text-align: center;
+  animation: scaleIn 250ms ease;
+}
+
+.modal[hidden] {
+  display: none !important;
+}
+
+.modal h3 {
+  font-family: 'Inika', serif;
+  font-weight: 700;
+  color: var(--purple); /* Assuming your --purple variable color */
+  margin-bottom: 1rem;
+}
+
+.modal p {
+  font-family: 'Inika', serif;
+  color: var(--purple);
+  line-height: 1.6;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+.modal-btn {
+  font-family: 'Inter', sans-serif;
+  padding: 0.7rem 1.6rem;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.modal-btn.primary {
+  background: var(--purple);
+  color: var(--white);
+}
+
+.modal-btn.cancel {
+  background: transparent;
+  color: var(--purple);
+  border: 1px solid var(--purple);
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+
+/* ================= TESTI ================= */
+
+/* Testimonial Base Styles */
+.testi-container {
+  background-color: var(--body-bg);
+  padding: 60px 10%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.testi-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1100px;
+  gap: 40px;
+}
+
+/* Text Styling */
+.testi-text {
+  flex: 1;
+}
+
+.inika-brown {
+  font-family: 'Inika', serif;
+  font-weight: 700;
+  color: var(--purple); /* Using your brown variable */
+  font-style: normal;
+}
+
+blockquote.inika-brown {
+  font-size: 32px;
+  line-height: 1.3;
+  margin: 0 0 15px 0;
+}
+
+cite.inika-brown {
+  font-size: 24px;
+  display: block;
+}
+
+/* Image Styling */
+.testi-image {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.testi-image img {
+  max-width: 400px;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Testi 2 Specific: Thin line below */
+.testi2 {
+  padding-bottom: 20px; /* Adjusting for the line */
+}
+
+.testi-divider {
+  width: 90%;
+  max-width: 1100px;
+  height: 1px;
+  background-color: var(--purple);
+  opacity: 0.3; /* Makes it a "thin", subtle line */
+  margin-top: 60px;
+}
+
+/* Responsive for Mobile */
+@media (max-width: 768px) {
+  .testi-content {
+    flex-direction: column !important; /* Forces stack on mobile */
+    text-align: center;
+  }
+
+  /* Reverse order for testi1 on mobile so text stays on top if preferred */
+  .testi1 .testi-content {
+    flex-direction: column-reverse !important;
+  }
+
+  blockquote.inika-brown {
+    font-size: 24px;
+  }
+}
+
+
+/* ======================================================
+   RESPONSIVE (PHONE SIZE)
+====================================================== */
+#toast-container {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.toast {
+  min-width: 220px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  color: white;
+  font-size: 14px;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: toast-in 0.3s forwards;
+}
+
+.toast.success { background: #16a34a; }
+.toast.error { background: #dc2626; }
+.toast.info { background: #2563eb; }
+
+@keyframes toast-in {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 1.2rem 1.5rem;
+  }
+
+  .content-4-header h2 {
+    font-size: 32px;
+  }
+
+  .content-4-header p {
+    font-size: 16px;
+  }
+  .reserve-btn{
+  padding: 0.5rem 5.5rem;}
+  #tempat {
+  width: 100%;
+  max-width: 100%; /* Memaksa select tetap di dalam kontainer */
+  box-sizing: border-box; /* Menghitung padding ke dalam lebar */
+  text-overflow: ellipsis; /* Memberikan tanda titik-titik (...) jika teks terlalu panjang */
+  white-space: nowrap;
+  overflow: hidden;
+  display: block;
+}
+}
+
+
+
+
+
+/* HEADER BARUUU */
+:root {
+  --card-bg: rgba(227, 68, 26, 0.8);
+}
+.hero-slider {
+  position: relative;
+  width: 100%;
+  height: 600px; /* Sesuaikan tinggi */
+  overflow: hidden;
+  background: #2a0505 url('../assets/herobg.png') no-repeat center center/cover;
+}
+
+.slider-container {
+  display: flex;
+  height: 100%;
+  transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.slide {
+  min-width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slide-content {
+  display: flex;
+  align-items: center;
+  max-width: 1200px;
+  width: 90%;
+}
+
+/* Text Card Styling */
+.text-card {
+  background: var(--card-bg);
+  padding: 3rem;
+  border-radius: 40px 0 0 40px; /* Hanya kiri atas dan bawah */
+  color: white;
+  flex: 1;
+  backdrop-filter: blur(5px);
+  animation: slideInText 0.8s ease-out forwards;
+}
+
+.title {
+  font-family: 'Inika', serif;
+  font-weight: 700;
+  font-size: 44px;
+  line-height: 1;
+  margin-bottom: -10px;
+}
+
+.subtitle {
+  font-family: 'Inika', serif;
+  font-weight: 400;
+  font-size: 20px; /* Disesuaikan untuk keterbacaan, instruksi 36px bisa diubah jika terlalu besar */
+  opacity: 0.9;
+}
+
+.btn-menu {
+  display: inline-block;
+  background-color: var(--white);
+  color: var(--purple);
+  text-decoration: none;
+  font-family: 'Inika', serif;
+  padding: 12px 20px;
+  border-radius: 999px;
+  font-size: 18px;
+  transition: transform 0.3s ease;
+}
+
+.btn-menu:hover {
+  transform: scale(1.05);
+}
+
+/* Image Styling */
+.image-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  perspective: 1000px;
+}
+
+.hero-img {
+  width: 130%;
+  max-width: 500px;
+  filter: drop-shadow(0 20px 30px rgba(0,0,0,0.5));
+  animation: float 4s ease-in-out infinite;
+  margin-left: -130px; /* Tambahkan margin-left negatif untuk mendekatkan ke card */
+  z-index: 2;
+}
+
+/* Nav Buttons */
+.nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,0,0,0.3);
+  color: var(--white);
+  border: none;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 10;
+  transition: background 0.3s;
+}
+
+.nav-btn:hover { background: var(--purple); }
+.prev { left: 20px; }
+.next { right: 20px; }
+
+/* ANIMATIONS */
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(2deg); }
+}
+
+@keyframes slideInText {
+  from { opacity: 0; transform: translateX(-50px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* MOBILE SIZE */
+/* --- Tampilan Mobile yang Lebih Keren --- */
+/* --- Tampilan Mobile Premium --- */
+@media (max-width: 768px) {
+  .hero-slider {
+    padding: 10px 20px 60px 20px;
+    height: 700px; /* Biarkan memanjang sesuai konten di mobile */
+    flex-direction: column;
+    align-items: center;
+  }
+  .slide-content {
+  display: flex;
+  align-items: center;
+  max-width: 1200px;
+  width: 100%;
+
+}
+
+  .slide-content {
+    flex-direction: column;
+    justify-content: center;
+    gap: 0; /* Kita pakai margin negatif saja */
+  }
+
+  .image-container {
+    margin-left: 0;
+    margin-bottom: -60px; /* Overlap lebih dalam ke card */
+    width: 90%;
+    z-index: 5; /* Pastikan di atas card */
+    filter: drop-shadow(0 15px 25px rgba(0,0,0,0.4));
+  }
+
+  .hero-img {
+    max-width: 280px; /* Ukuran pas untuk layar HP */
+    transform: rotate(-3deg); /* Sedikit miring agar dinamis */
+  }
+
+  .text-card {
+    /* Bentuk melengkung yang lebih estetik */
+    border-radius: 50px 10px 50px 10px;
+    padding: 80px 20px 40px 20px;
+    width: 92%;
+    margin: 0 auto;
+    background: rgba(146, 46, 46, 0.85); /* Lebih solid di HP agar teks terbaca */
+    backdrop-filter: blur(10px);
+    box-shadow: 0 -10px 30px rgba(0,0,0,0.2);
+  }
+
+  .title {
+    font-size: 28px;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+    line-height: 1.2;
+  }
+
+  .subtitle {
+    font-size: 15px;
+    line-height: 1.5;
+    margin-bottom: 25px;
+    padding: 0 10px;
+  }
+
+  /* Navigasi Kiri Kanan Lebih Kecil di HP */
+  .nav-btn {
+    width: 35px;
+    height: 35px;
+    font-size: 14px;
+    background: rgba(255, 255, 255, 0.1);
+  }
+}

@@ -1,0 +1,1024 @@
+/* ======================================================
+   ROOT VARIABLES
+====================================================== */
+:root {
+  --body-bg: #FFE3A5;
+  --purple: #E3441A;
+  --white: #FFE3A5;
+  --header-height: 88px;
+  --transition: 400ms ease-out;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+/* ======== Scroll ======== */
+/* Modern Firefox & Standard support */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--purple) transparent;
+}
+
+/* Chrome, Edge, and Safari support */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--purple);
+  border-radius: 20px; /* Matches the rounded aesthetic of your buttons */
+  border: 2px solid var(--body-bg); /* Adds padding around the thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #432137; /* Slightly darker shade on hover */
+}
+/* ======================================================
+   BASE RESET
+====================================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inika', serif;
+  background-color: var(--body-bg);
+  color: var(--purple);
+}
+
+/* ======================================================
+   HEADER
+====================================================== */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  height: var(--header-height);
+  transition: background var(--transition),
+              backdrop-filter var(--transition),
+              box-shadow var(--transition);
+  padding-right: 10px;
+}
+
+/* Header container */
+.header-inner {
+  height: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-left: 1.5rem;
+  padding-right: 0; /* important */
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  display: grid;
+  /* 1fr (Logo) | auto (Nav) | 1fr (Actions) */
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 2rem;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.logo img {
+  height: 65px;
+  transition: opacity var(--transition);
+  position: absolute; /* This allows 'left' to work */
+  left: 10px;
+}
+
+
+/* Navigation */
+.nav {
+  display: flex;
+  gap: 2rem;
+}
+
+.nav a {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.925rem;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  color: var(--purple);
+  white-space: nowrap;
+}
+.nav a {
+  position: relative;
+}
+
+.nav a.is-active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 100%;
+  height: 2px;
+  background-color: currentColor;
+}
+
+
+/* Action buttons */
+.header-actions {
+  display: flex;
+  gap: 0.75rem;
+  position: absolute;
+  right: 10px; /* Exact distance from the right edge */
+  transform: translateY(-50%); /* Keeps it vertically centered in the header */
+}
+
+
+.btn {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  padding: 0.6rem 1.2rem;
+  border-radius: 999px;
+  text-decoration: none;
+}
+
+.btn-outline {
+  border: 1px solid var(--purple);
+  color: var(--purple);
+}
+
+/* ======================================================
+   HEADER STATES
+====================================================== */
+
+/* HERO STATE */
+.site-header.is-hero {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(14px);
+}
+
+.site-header.is-hero .header-actions {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-6px);
+}
+
+/* SCROLLED STATE */
+.site-header.is-scrolled {
+  background: var(--body-bg);
+  backdrop-filter: none;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+.site-header.is-scrolled .header-actions {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+/* ======================================================
+   FORCED SOLID HEADER (MENU PAGE)
+====================================================== */
+
+.header-solid .site-header {
+  background: var(--body-bg);
+  backdrop-filter: none;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+.header-solid .site-header .header-actions {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+/* ======================================================
+   RESPONSIVE
+====================================================== */
+@media (max-width: 768px) {
+  .header-inner {
+   display: grid;
+    /* This creates 3 equal-width zones */
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 0; /* Reduced gap to prevent squeezing */
+    padding: 0 1rem;
+    padding-left: 0px;
+  }
+
+
+  .header-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.4rem;
+    justify-items: end;
+  }
+
+  .header-actions .btn {
+    min-width: 72px;
+    text-align: center;
+    padding: 0.5rem 0.9rem;
+    font-size: 13px;
+    padding-right: 10px;
+  }
+
+
+  .nav {
+    /* This ensures your 2x2 grid nav stays in the center column */
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.2rem;
+    justify-content: center;
+  }
+
+  /* Make sure the logo doesn't push the nav over */
+  .logo img {
+    height: 40px;
+  }
+
+
+   .hero-tagline {
+      font-size: 18px;
+    }
+   .nav a {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.725rem;
+      letter-spacing: 0.08em;
+      text-decoration: none;
+      color: var(--purple);
+      white-space: nowrap;
+    }
+}
+@media (max-width: 768px) {
+  .nav {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem 0.75rem;
+    overflow: visible;
+    text-align: center;
+  }
+
+  .nav a {
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    white-space: normal;
+  }
+}
+/* ======================================================
+   FADE-UP ANIMATION (ON SCROLL)
+====================================================== */
+
+/* Default visible state (no JS fallback) */
+.fade-up {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Enhanced state (JS-enabled browsers only) */
+.js .fade-up {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 500ms ease-out,
+    transform 500ms ease-out;
+}
+
+/* When element becomes visible */
+.fade-up.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Optional stagger support */
+.fade-up[data-delay] {
+  transition-delay: var(--delay, 0ms);
+}
+/* ======================================================
+   MENU SECTION LAYOUT
+====================================================== */
+
+.menu-section {
+  padding: 1rem 0;
+}
+
+.menu-layout {
+  display: grid;
+  grid-template-columns: 270px 1fr; /* LEFT FIXED, RIGHT FLEX */
+  gap: 10px;
+  width: 100%;
+  padding-left: 28px;
+}
+
+
+/* ======================================================
+   LEFT CATEGORIES
+====================================================== */
+
+.menu-categories {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.menu-cat {
+  font-family: 'Inika', serif;
+  font-weight: 700;
+  font-size: 24px;
+  color: var(--purple);
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 200ms ease, opacity 200ms ease;
+  opacity: 0.6;
+}
+
+.menu-cat.is-active {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* ======================================================
+   RIGHT CONTENT (SCROLLABLE)
+====================================================== */
+
+.menu-content {
+  overflow-y: auto;
+  max-height: calc(100vh - 140px);
+  padding-right: 10px;
+}
+
+/* Category title */
+.menu-group {
+  margin-bottom: 4rem;
+}
+
+.menu-group-title {
+  font-family: 'Inika', serif;
+  font-weight: 700;
+  font-size: 48px;
+  color: var(--purple);
+  margin-bottom: 2rem;
+}
+
+/* ======================================================
+   MENU GRID
+====================================================== */
+
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 10px;
+
+}
+
+/* ======================================================
+   MENU CARD
+====================================================== */
+
+.menu-card {
+  width: 100%;
+}
+
+.menu-image {
+  width: 100%;
+  height: 365px;
+  background-color: #FFEDF9;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 8px;
+}
+
+
+.menu-info {
+  text-align: center;
+  padding-top: 1rem;
+}
+
+.menu-title {
+  font-family: 'Inika', serif;
+  font-size: 32px;
+  color: var(--purple);
+  margin-bottom: 0.5rem;
+}
+
+.menu-desc {
+  font-family: 'Inika', serif;
+  font-size: 20px;
+  line-height: 1.4;
+  max-height: calc(1.4em * 3);
+  overflow: hidden;
+  margin-bottom: 0.75rem;
+}
+
+.menu-price {
+  font-family: 'Inika', serif;
+  font-size: 18px;
+}
+
+/* ======================================================
+   RESPONSIVE
+====================================================== */
+
+@media (max-width: 768px) {
+  .menu-layout {
+    grid-template-columns: 1fr;
+    padding-left: 0.5rem;
+  }
+
+  .menu-categories {
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 2rem;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+
+  .menu-cat {
+    white-space: nowrap;
+
+  }
+
+  .menu-content {
+    max-height: none;
+    overflow: visible;
+
+  }
+}
+
+
+
+/* ======================================================
+   SUBTLE SCROLLBAR (RIGHT PANEL)
+====================================================== */
+
+.menu-content {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(88, 44, 73, 0.35) transparent;
+}
+
+/* Chrome / Edge / Safari */
+.menu-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.menu-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.menu-content::-webkit-scrollbar-thumb {
+  background-color: rgba(88, 44, 73, 0.35);
+  border-radius: 10px;
+}
+/* ======================================================
+   MENU CARD HOVER (DESKTOP ONLY)
+====================================================== */
+
+@media (hover: hover) and (pointer: fine) {
+  .menu-card {
+    transition: transform 300ms ease-out;
+  }
+
+  .menu-card:hover {
+    transform: translateY(-4px);
+  }
+
+  .menu-image {
+    transition: transform 400ms ease-out, box-shadow 400ms ease-out;
+  }
+
+  .menu-card:hover .menu-image {
+    transform: scale(1.02);
+    box-shadow: 0 12px 30px rgba(88, 44, 73, 0.12);
+  }
+}
+@media (max-width: 768px) {
+  .menu-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+}
+@media (max-width: 768px) {
+  .menu-image {
+    height: 160px;
+    border-radius: 6px;
+  }
+
+  .menu-title {
+    font-size: 16px;
+  }
+
+  .menu-desc {
+    font-size: 13px;
+    max-height: calc(1.4em * 2);
+  }
+
+  .menu-price {
+    font-size: 14px;
+  }
+
+  .menu-info {
+    padding-top: 0.5rem;
+  }
+}
+
+.footer {
+  background-color: var(--purple); /* purple */
+  color: var(--white);
+  font-family: 'Inika', serif;
+   padding: 48px 50px 28px;
+}
+
+/* ================= TOP GRID ================= */
+.footer-top {
+  display: grid;
+  grid-template-columns: 0.5fr 0.5fr 0.5fr 1.5fr;
+  align-items: start;
+}
+
+
+
+/* COLUMNS */
+.footer-col {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* TITLES */
+.footer-title {
+  font-weight: 700;
+  font-size: 24px;
+  margin-bottom: 0px;
+}
+
+/* LIST */
+.footer-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-list li {
+  margin-bottom: 10px;
+}
+
+.footer-list a {
+  color: var(--white);
+  text-decoration: none;
+  font-size: 18px;
+  opacity: 0.9;
+  transition: opacity 0.2s ease;
+}
+
+.footer-list a:hover {
+  opacity: 1;
+}
+
+/* RIGHT IMAGE */
+.footer-right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  margin-top: -20px; /* move upward */
+}
+.footer-image {
+  max-width: 40%;
+  margin-left: auto;
+  width: auto;
+  display: block;
+}
+
+/* ================= DIVIDER ================= */
+.footer-divider {
+  margin: 40px 0 40px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* ================= BOTTOM ================= */
+.footer-bottom {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.footer-logo {
+  height: 70px;
+  width: auto;
+  display: block;
+}
+
+/* ================= MOBILE ================= */
+@media screen and (max-width: 768px) {
+  .footer {
+    padding: 60px 24px 32px;
+  }
+
+  .footer-top {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .footer-right {
+    justify-content: center;
+  }
+
+  .footer-divider {
+    margin: 40px 0 32px;
+  }
+  /* Hide right illustration */
+  .footer-right {
+    display: none;
+  }
+
+  .footer-logo {
+    display: none;
+  }
+
+  .footer-logo-mobile {
+    display: block;
+    height: 80px;
+    width: auto;
+    margin: 0 auto;
+  }
+}
+.footer-logo-mobile {
+  display: none;
+}
+/* ======================================================
+   FADE-UP ANIMATION (ON SCROLL)
+====================================================== */
+
+/* Default visible state (no JS fallback) */
+.fade-up {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Enhanced state (JS-enabled browsers only) */
+.js .fade-up {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 500ms ease-out,
+    transform 500ms ease-out;
+}
+
+/* When element becomes visible */
+.fade-up.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Optional stagger support */
+.fade-up[data-delay] {
+  transition-delay: var(--delay, 0ms);
+}
+
+/* ======================================================
+   ADD BUTTON
+====================================================== */
+.add-btn {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+
+  border: none;
+  background: var(--purple);
+  color: var(--white);
+
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.add-btn:hover {
+  transform: scale(1.1);
+  opacity: 0.9;
+}
+@media (max-width: 768px) {
+
+  .add-btn {
+    width: 28px;
+    height: 28px;
+
+    bottom: 8px;
+    right: 8px;
+
+    font-size: 16px;
+  }
+}
+@media (max-width: 768px) {
+
+  .add-btn {
+    width: 26px;
+    height: 26px;
+
+    bottom: 6px;
+    right: 6px;
+
+    font-size: 15px;
+    opacity: 0.95;
+  }
+}
+
+/* ======================================================
+   CART BADGE
+====================================================== */
+.cart-status {
+  position: relative;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+
+  background: var(--purple);
+  color: var(--white);
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 999px;
+}
+/* Floating Cart Button */
+.cart-fab {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 1000;
+
+  background: #1e1e1e;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 14px 18px;
+  font-size: 18px;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  box-shadow: 0 8px 20px rgba(0,0,0,.25);
+}
+
+.cart-badge {
+  background: #c62828;
+  color: #fff;
+  font-size: 12px;
+  padding: 3px 7px;
+  border-radius: 999px;
+}
+
+/* Overlay */
+.cart-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.4);
+  opacity: 0;
+  pointer-events: none;
+  transition: .3s;
+  z-index: 999;
+}
+
+.cart-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Drawer */
+.cart-drawer {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  height: 85vh;
+  width: min(420px, 100%);
+  background: #fff;
+  transform: translateY(100%);
+  transition: .3s ease;
+  z-index: 1000;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.cart-drawer.active {
+  transform: translateY(0);
+}
+
+.cart-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px;
+  border-bottom: 1px solid #eee;
+}
+
+.cart-items {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+.cart-footer {
+  padding: 16px;
+  border-top: 1px solid #eee;
+}
+
+/* Desktop behavior */
+@media (min-width: 768px) {
+  .cart-drawer {
+    height: 100vh;
+  }
+}
+/* ======================================================
+   CART DRAWER & OVERLAY
+====================================================== */
+.cart-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  visibility: hidden;
+  transition: var(--transition);
+  z-index: 999;
+}
+.cart-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.cart-drawer {
+  position: fixed;
+  top: 0;
+  right: -400px; /* Hidden by default */
+  width: 400px;
+  height: 100%;
+  background: var(--white);
+  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  transition: var(--transition);
+}
+
+.cart-drawer.active {
+  right: 0;
+}
+
+/* ======================================================
+   CART HEADER & CLOSE (X) BUTTON
+====================================================== */
+.cart-header {
+  padding: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(88, 44, 73, 0.1);
+}
+
+.cart-header h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: var(--purple);
+}
+
+#close-cart {
+  background: transparent;
+  border: 1px solid rgba(88, 44, 73, 0.3);
+  color: var(--purple);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: all 0.2s ease;
+}
+
+#close-cart:hover {
+  background-color: var(--purple);
+  color: var(--white);
+  transform: rotate(90deg);
+}
+
+/* ======================================================
+   CART ITEMS AREA
+====================================================== */
+.cart-items {
+  flex: 1; /* Pushes the button to the bottom */
+  overflow-y: auto;
+  padding: 24px;
+}
+
+/* ======================================================
+   CONFIRM BUTTON
+====================================================== */
+.confirm-btn {
+  margin: 24px;
+  background-color: var(--purple);
+  color: var(--white);
+  border: none;
+  padding: 16px;
+  border-radius: 12px;
+  font-family: 'Inika', serif;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+  box-shadow: 0 4px 12px rgba(88, 44, 73, 0.2);
+}
+
+.confirm-btn:hover {
+  background-color: #432137;
+  transform: translateY(-2px);
+}
+
+.confirm-btn:active {
+  transform: translateY(0);
+}
+
+/* ======================================================
+   RESPONSIVE (PHONE SIZE)
+====================================================== */
+@media (max-width: 480px) {
+  .cart-drawer {
+    width: 100%; /* Full screen on phones */
+    right: -100%;
+  }
+
+  .cart-header {
+    padding: 16px;
+  }
+
+  .confirm-btn {
+    margin: 16px;
+    padding: 14px;
+    font-size: 1rem;
+  }
+}
+
+
+/* ======================================================
+   RESPONSIVE (PHONE SIZE)
+====================================================== */
+#toast-container {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.toast {
+  min-width: 220px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  color: white;
+  font-size: 14px;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: toast-in 0.3s forwards;
+}
+
+.toast.success { background: #16a34a; }
+.toast.error { background: #dc2626; }
+.toast.info { background: #2563eb; }
+
+@keyframes toast-in {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* Force Header Background and Text Colors */
+#siteHeader {
+    background-color: var(--purple); /* SaddleBrown */
+}
+
+#siteHeader .nav a,
+#siteHeader .header-actions .btn {
+    color:var(--white); /* Beige */
+    border-color:var(--white); /* Ensures button borders match */
+}
