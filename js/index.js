@@ -332,7 +332,7 @@ for (let hour = 9; hour <= 20; hour++) {
       : "- (No pre-order)";
 
     const message =
-      `Halo Ayam Penyet Surabaya!\n\n` +
+      `Halo Bebek Sentosa!\n\n` +
       `*Reservasi Baru*\n\n` +
       `Nama: ${reservation.customer_name}\n` +
       `Tanggal: ${reservation.reservation_date}\n` +
