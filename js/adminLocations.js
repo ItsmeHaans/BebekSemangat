@@ -30,7 +30,7 @@ async function adminFetch(url, options = {}) {
   return res;
 }
 
-  const API = 'https://bebeksemangat-production.up.railway.app/locations';
+  const API = 'https://bebeksemangat-production.up.railway.app/locations/';
   const UPLOAD_API = 'https://bebeksemangat-production.up.railway.app/locations/upload';
 
   /* ================= DOM ELEMENTS ================= */
@@ -277,7 +277,7 @@ renderAdminStores(stores);
 
       if (result.isConfirmed) {
         try {
-          await adminFetch(`${API}/${id}`, { method: 'DELETE' });
+          await adminFetch(`${API}${id}`, { method: 'DELETE' });
           loadLocations();
           Swal.fire('Deleted', 'Store removed successfully', 'success');
         } catch (err) {
@@ -316,7 +316,7 @@ if (!isNaN(inputReviews.value)) {
   payload.reviews = Number(inputReviews.value);
 }
     const isUpdate = inputId.value !== '';
-    const url = isUpdate ? `${API}/${inputId.value}` : API;
+    const url = isUpdate ? `${API}${inputId.value}` : API;
     const method = isUpdate ? 'PUT' : 'POST';
 
     Swal.fire({ title: 'Saving...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });

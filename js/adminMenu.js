@@ -3,7 +3,7 @@
  */
 document.addEventListener('DOMContentLoaded', async () => {
 
-  const API = 'https://bebeksemangat-production.up.railway.app/menu';
+  const API = 'https://bebeksemangat-production.up.railway.app/menu/';
   const UPLOAD_API = 'https://bebeksemangat-production.up.railway.app/menu/upload';
   const ADMIN_KEY_NAME = 'ADMIN_API_KEY';
 
@@ -267,7 +267,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
       if (result.isConfirmed) {
         try {
-          await adminFetch(`${API}/${id}`, { method: 'DELETE' });
+          await adminFetch(`${API}${id}`, { method: 'DELETE' });
           loadMenu();
           Swal.fire('Deleted!', 'Item berhasil dihapus.', 'success');
         } catch (err) {
@@ -292,7 +292,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     const isUpdate = inputId.value !== '';
-    const url = isUpdate ? `${API}/${inputId.value}` : API;
+    const url = isUpdate ? `${API}${inputId.value}` : API;
     const method = isUpdate ? 'PUT' : 'POST';
 
     try {

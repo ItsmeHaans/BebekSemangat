@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return res;
   }
 
-  const API = 'https://bebeksemangat-production.up.railway.app/events';
+  const API = 'https://bebeksemangat-production.up.railway.app/events/';
   const UPLOAD_API = 'https://bebeksemangat-production.up.railway.app/events/upload';
 
   document.getElementById('adminLogout')?.addEventListener('click', e => {
@@ -346,7 +346,7 @@ if (e.target.classList.contains('btn-edit')) {
     });
 
     if (ok.isConfirmed) {
-      await adminFetch(`${API}/${id}`, { method: 'DELETE' });
+      await adminFetch(`${API}${id}`, { method: 'DELETE' });
       loadEvents();
     }
   }
@@ -394,7 +394,7 @@ if (e.target.classList.contains('btn-edit')) {
   const isEdit = Boolean(inputId.value);
 
   const res = await adminFetch(
-    isEdit ? `${API}/${inputId.value}` : API,
+    isEdit ? `${API}${inputId.value}` : API,
     {
       method: isEdit ? 'PUT' : 'POST',
       headers: { 'Content-Type': 'application/json' },
