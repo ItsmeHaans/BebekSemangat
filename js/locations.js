@@ -55,7 +55,7 @@ function escapeHTML(str = "") {
   /* ======================================================
      2. FETCH LOCATIONS WITH FALLBACK
   ====================================================== */
-  fetch(`${API_BASE}/locations`)
+  fetch(`${API_BASE}/locations/`)
     .then(res => {
       if (!res.ok) throw new Error("Could not fetch locations");
       return res.json();
