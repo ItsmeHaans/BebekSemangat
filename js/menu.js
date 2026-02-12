@@ -64,10 +64,15 @@ async function initDraftOrder() {
     headers["X-Visitor-Token"] = session.visitor_token;
   }
 
-  const res = await fetch(`${API_BASE}/orders/draft/`, {
+  // Gunakan URL persis seperti router, tanpa trailing slash
+  const res = await fetch(`${API_BASE}/orders/draft`, {
     method: "POST",
     headers
   });
+
+  if (!res.ok) {
+    throw new Error(`Draft fetch failed: ${res.status}`);
+  }
 
   const data = await res.json();
 
