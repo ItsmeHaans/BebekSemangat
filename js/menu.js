@@ -93,7 +93,7 @@ async function initDraftOrder() {
   if (!currentOrderId) return;
 
   const res = await apiFetch(
-    `${API_BASE}/orders/${currentOrderId}/add/${menuItemId}/`,
+    `${API_BASE}/orders/${currentOrderId}/add/${menuItemId}`,
     { method: "POST" }
   );
 
@@ -148,7 +148,7 @@ function apiFetch(url, options = {}) {
   async function loadDraftItems() {
   if (!currentOrderId) return;
 
-  const res = await apiFetch(`${API_BASE}/orders/${currentOrderId}/`);
+  const res = await apiFetch(`${API_BASE}/orders/${currentOrderId}`);
   const data = await res.json();
 
   cartItemsContainer.innerHTML = "";
@@ -274,7 +274,7 @@ function apiFetch(url, options = {}) {
     if (!e.target.classList.contains("qty-btn")) return;
     const id = e.target.dataset.id;
     const action = e.target.dataset.action;
-    await apiFetch(`${API_BASE}/orders/${currentOrderId}/${action}/${id}/`, { method: "POST" });
+    await apiFetch(`${API_BASE}/orders/${currentOrderId}/${action}/${id}`, { method: "POST" });
     loadDraftItems();
   });
 
@@ -297,7 +297,7 @@ function apiFetch(url, options = {}) {
   }
 
   // Cek draft masih valid
-  const res = await apiFetch(`${API_BASE}/orders/${currentOrderId}/`);
+  const res = await apiFetch(`${API_BASE}/orders/${currentOrderId}`);
   if (!res.ok) {
     toast("Draft expired, silakan pilih ulang", "error");
     localStorage.removeItem("draft_session");

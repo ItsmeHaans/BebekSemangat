@@ -224,7 +224,7 @@ if (locationSelect) {
     orderSelect.innerHTML = '<option value="">No active order</option>';
     orderSelect.disabled = true;
   } else {
-    apiFetch(`${API_BASE}/orders/${draftSession.order_id}/`)
+    apiFetch(`${API_BASE}/orders/${draftSession.order_id}`)
   .then(res => res.json())
   .then(order => {
     loadedOrder = order; // ✅ SIMPAN DRAFT
