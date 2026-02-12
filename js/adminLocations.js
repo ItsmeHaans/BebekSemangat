@@ -30,8 +30,8 @@ async function adminFetch(url, options = {}) {
   return res;
 }
 
-  const API = 'http://127.0.0.1:8000/locations';
-  const UPLOAD_API = 'http://127.0.0.1:8000/locations/upload';
+  const API = 'https://bebeksemangat-production.up.railway.app/locations';
+  const UPLOAD_API = 'https://bebeksemangat-production.up.railway.app/locations/upload';
 
   /* ================= DOM ELEMENTS ================= */
   const locationModal = document.getElementById('locationModal');

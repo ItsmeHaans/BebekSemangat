@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ======================================================
      0. GLOBAL CONFIG
   ====================================================== */
-  const API_BASE = window.__API_BASE__ || 'http://127.0.0.1:8000';
+  const API_BASE = window.__API_BASE__ || 'https://bebeksemangat-production.up.railway.app';
   let EVENT_CACHE = [];
 
   /* ======================================================

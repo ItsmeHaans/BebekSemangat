@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 const draftSession = JSON.parse(localStorage.getItem("draft_session") || "null");
-const API_BASE = window.__API_BASE__ || "http://127.0.0.1:8000";
+const API_BASE = window.__API_BASE__ || "https://bebeksemangat-production.up.railway.app";
 function toast(message, type = "info", duration = 2500) {
   const container = document.getElementById("toast-container");
   if (!container) return;

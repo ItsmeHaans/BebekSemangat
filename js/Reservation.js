@@ -5,7 +5,7 @@
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  const API_BASE = window.__API_BASE__ || "http://127.0.0.1:8000";
+  const API_BASE = window.__API_BASE__ || "https://bebeksemangat-production.up.railway.app";
   const ADMIN_KEY_NAME = "ADMIN_API_KEY";
 
   /* ================= AUTH FETCH ================= */

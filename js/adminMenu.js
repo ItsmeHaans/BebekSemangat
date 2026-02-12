@@ -3,8 +3,8 @@
  */
 document.addEventListener('DOMContentLoaded', async () => {
 
-  const API = 'http://127.0.0.1:8000/menu';
-  const UPLOAD_API = 'http://127.0.0.1:8000/menu/upload';
+  const API = 'https://bebeksemangat-production.up.railway.app/menu';
+  const UPLOAD_API = 'https://bebeksemangat-production.up.railway.app/menu/upload';
   const ADMIN_KEY_NAME = 'ADMIN_API_KEY';
 
   // State untuk mencegah proses double

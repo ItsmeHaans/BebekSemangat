@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
 document.documentElement.classList.add("js");
 
-const API_BASE = window.__API_BASE__ || "http://127.0.0.1:8000";
+const API_BASE = window.__API_BASE__ || "https://bebeksemangat-production.up.railway.app";
 function escapeHTML(str = "") {
   return str.replace(/[&<>"']/g, m => ({
     '&': '&amp;',

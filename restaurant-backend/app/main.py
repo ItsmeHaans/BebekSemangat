@@ -69,11 +69,14 @@ else:
     ALLOWED_ORIGINS = [
         "https://kedaiamarta.com",
         "https://www.kedaiamarta.com",
+        "https://bebeksemangat-production.up.railway.app",
+        "https://bebek-semangat-hf71x21ty-itsmehaans-projects.vercel.app"
+
     ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=ALLOWED_ORIGINS,
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

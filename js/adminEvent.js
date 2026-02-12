@@ -25,8 +25,8 @@ document.addEventListener('DOMContentLoaded', () => {
     return res;
   }
 
-  const API = 'http://127.0.0.1:8000/events';
-  const UPLOAD_API = 'http://127.0.0.1:8000/events/upload';
+  const API = 'https://bebeksemangat-production.up.railway.app/events';
+  const UPLOAD_API = 'https://bebeksemangat-production.up.railway.app/events/upload';
 
   document.getElementById('adminLogout')?.addEventListener('click', e => {
   e.preventDefault();
