@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
 ====================================================== */
 
 /* ---------- CONFIG ---------- */
-const EVENT_ENDPOINT = `${API_BASE}/events`;
+const EVENT_ENDPOINT = `${API_BASE}/events/`;
 
 /* ---------- ELEMENTS ---------- */
 const list = document.getElementById('eventList');
